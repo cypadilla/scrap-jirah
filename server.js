@@ -4,19 +4,31 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get('/scrape', async (req, res) => {
-    const browser = await puppeteer.launch({ headless: true }); // Puede ser 'false' para ver el navegador.
-    const page = await browser.newPage();
-    await page.goto('https://web.bascbogota.com/node/5', { waitUntil: 'networkidle2' });
+    try {
+        // Configuración necesaria para Puppeteer en entornos en la nube
+        const browser = await puppeteer.launch({
+            headless: true, // Ejecuta en modo headless
+            args: ['--no-sandbox', '--disable-setuid-sandbox'], // Requerido en entornos como Render
+        });
 
-    // Extrae el contenido o haz lo que necesites con Puppeteer.
-    const content = await page.content();  // Puedes cambiar esto según lo que necesites extraer.
+        const page = await browser.newPage();
+        await page.goto('https://web.bascbogota.com/node/5', { waitUntil: 'networkidle2' });
 
-    // Devuelve el contenido HTML
-    res.send(content);
+        // Extrae el contenido de la página
+        const content = await page.content();
 
-    await browser.close();
+        // Cierra el navegador
+        await browser.close();
+
+        // Devuelve el contenido HTML
+        res.status(200).send(content);
+    } catch (error) {
+        console.error('Error durante el scraping:', error);
+        res.status(500).send({ error: 'Error al realizar el scraping.' });
+    }
 });
 
+// Inicia el servidor
 app.listen(PORT, () => {
     console.log(`Servidor Puppeteer corriendo en http://localhost:${PORT}`);
 });
