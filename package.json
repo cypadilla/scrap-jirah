@@ -1,0 +1,13 @@
+{
+  "name": "puppeteer-server",
+  "version": "1.0.0",
+  "description": "Puppeteer project deployed on Render",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "puppeteer": "^19.6.3"
+  }
+}
