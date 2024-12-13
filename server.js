@@ -6,10 +6,18 @@ const PORT = process.env.PORT || 3000;
 app.get('/scrape', async (req, res) => {
     try {
         const browser = await puppeteer.launch({
-            headless: 'new',
-            executablePath: '/usr/bin/google-chrome', // Ruta donde está instalado Chrome
-            args: ['--no-sandbox', '--disable-setuid-sandbox'],
+            headless: true,
+            executablePath: process.env.CHROME_BIN || null,
+            args: [
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--no-zygote',
+                '--single-process',
+            ],
         });
+
         const page = await browser.newPage();
         await page.goto('https://web.bascbogota.com/node/5', { waitUntil: 'networkidle2' });
 
