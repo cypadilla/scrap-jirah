@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 app.get('/scrape', async (req, res) => {
     try {
         const browser = await puppeteer.launch({
-            headless: true,
+            headless: "new",
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
